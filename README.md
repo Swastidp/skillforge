@@ -31,13 +31,13 @@ config needed.
 Everything
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/master/install.sh | bash
 ```
 
 Only the skills you name
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh | bash -s -- find-context save-context
+curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/master/install.sh | bash -s -- find-context save-context
 ```
 
 **Windows (PowerShell)**
@@ -45,19 +45,13 @@ curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh
 Everything
 
 ```powershell
-irm https://raw.githubusercontent.com/Swastidp/skillforge/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/Swastidp/skillforge/master/install.ps1 | iex
 ```
 
-Clone the repo
+Selected skills, single command
 
 ```powershell
-git clone https://github.com/Swastidp/skillforge.git
-```
-
-Then install selected skills
-
-```powershell
-.\skillforge\install.ps1 find-context save-context
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/Swastidp/skillforge/master/install.ps1))) find-context save-context
 ```
 
 Prefer to do it by hand? Clone and copy the folders you want into `~/.claude/skills/`.

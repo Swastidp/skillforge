@@ -1,20 +1,24 @@
 #!/usr/bin/env bash
-# skillforge installer (macOS / Linux / Git-Bash)
+# skillforge installer (macOS / Linux / Git-Bash) — no git, no full clone.
+# Remote runs fetch a small CDN tarball (no api.github.com, no rate limits) and
+# extract only the skill(s) you ask for into ~/.claude/skills.
 #
 #   Install everything:
-#     curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh | bash
+#     curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/master/install.sh | bash
 #
 #   Install selected skills only (space-separated names):
-#     curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh | bash -s -- find-context save-context
+#     curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/master/install.sh | bash -s -- find-context save-context
 #
 #   From a local clone: ./install.sh            (all)
 #                       ./install.sh find-context (selected)
 set -euo pipefail
 
-REPO_URL="https://github.com/Swastidp/skillforge.git"
+OWNER="Swastidp"
+REPO="skillforge"
+BRANCH="master"
 DEST="${HOME}/.claude/skills"
 
-# Find the skills source: a local checkout if we're running from one, else clone.
+# Find the skills source: a local checkout if we're running from one, else the CDN tarball.
 SRC=""
 if [ -n "${BASH_SOURCE:-}" ] && [ -f "${BASH_SOURCE[0]:-}" ]; then
   here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,8 +28,9 @@ if [ -z "$SRC" ]; then
   tmp="$(mktemp -d)"
   trap 'rm -rf "$tmp"' EXIT
   echo "Fetching skillforge..."
-  git clone --depth 1 "$REPO_URL" "$tmp/skillforge" >/dev/null 2>&1
-  SRC="$tmp/skillforge/skills"
+  curl -fsSL "https://codeload.github.com/$OWNER/$REPO/tar.gz/refs/heads/$BRANCH" -o "$tmp/repo.tgz"
+  tar -xzf "$tmp/repo.tgz" -C "$tmp"
+  SRC="$(echo "$tmp/$REPO-$BRANCH/skills")"
 fi
 
 mkdir -p "$DEST"
