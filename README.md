@@ -28,22 +28,35 @@ config needed.
 
 **macOS / Linux / Git-Bash**
 
-```bash
-# everything
-curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh | bash
+Everything
 
-# only the skills you name
+```bash
+curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh | bash
+```
+
+Only the skills you name
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/Swastidp/skillforge/main/install.sh | bash -s -- find-context save-context
 ```
 
 **Windows (PowerShell)**
 
-```powershell
-# everything
-irm https://raw.githubusercontent.com/Swastidp/skillforge/main/install.ps1 | iex
+Everything
 
-# only selected skills: clone, then pass names
+```powershell
+irm https://raw.githubusercontent.com/Swastidp/skillforge/main/install.ps1 | iex
+```
+
+Clone the repo
+
+```powershell
 git clone https://github.com/Swastidp/skillforge.git
+```
+
+Then install selected skills
+
+```powershell
 .\skillforge\install.ps1 find-context save-context
 ```
 
@@ -65,9 +78,9 @@ Two skills fix that as a loop:
   next session — before Claude reaches for exploration agents or broad searches.
 
 ```
-  ┌────────────────┐        writes         ┌───────────────────────────┐
-  │  session ends  │ ───► save-context ───► │  ~/.claude/save-context/  │
-  └────────────────┘                        │        <repo-slug>/       │
+  ┌────────────────┐        writes           ┌───────────────────────────┐
+  │  session ends  │ ───► save-context ───►  │  ~/.claude/save-context/  │
+  └────────────────┘                         │        <repo-slug>/       │
                                              │  codebase.md              │
   ┌────────────────┐                         │  research.md              │
   │ session starts │ ◄── find-context ◄───── │  behavior.md              │
