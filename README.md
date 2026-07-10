@@ -18,6 +18,8 @@ invoke one by hand with `/<skill-name>`.
 | Skill | What it does |
 |-------|--------------|
 | [**context-memory**](#context-memory) (`save-context` + `find-context`) | Persistent, per-repo memory so Claude Code stops re-exploring your codebase every session |
+| [**update-docs**](skills/update-docs/) | Finds every doc tied to a repo — tracked or gitignored — and syncs them with its actual current state, verifying each claim before editing |
+| [**review-changes**](skills/review-changes/) | Explains your staged/unstaged diff file-by-file, groups it by theme, flags likely bugs or accidental commits, and proposes a commit plan |
 
 *(more to come — this list grows as skills prove themselves)*
 
