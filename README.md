@@ -20,7 +20,7 @@ invoke one by hand with `/<skill-name>`.
 | [**context-memory**](#context-memory) (`save-context` + `find-context`) | Persistent, per-repo memory so Claude Code stops re-exploring your codebase every session | auto + `/save-context`, `/find-context` |
 | [**update-docs**](#update-docs) | Finds every doc tied to a repo — tracked or gitignored — and syncs them with its actual current state, verifying each claim before editing | `/update-docs` |
 | [**review-changes**](#review-changes) | Explains your staged/unstaged diff file-by-file, groups it by theme, flags likely bugs or accidental commits, and proposes a commit plan | `/review-changes` |
-| [**chit-chat**](#chit-chat) | Repo-scoped conversation mode *template* — Claude answers only questions related to your project and politely declines everything else | `/chit-chat` |
+| [**chit-chat**](#chit-chat) | Repo-scoped conversation mode — auto-detects the repo you're in and answers only questions related to it, politely declining everything else | `/chit-chat` |
 | [**think**](#think) | Deliberate pause for judgment — gives an honest, reasoned opinion instead of staying safely inside the current plan or scope | `/think` |
 
 *(more to come — this list grows as skills prove themselves)*
@@ -147,9 +147,10 @@ the current project — its domain concepts, codebase structure, interfaces, dep
 and politely declines anything unrelated. Useful when you want to think out loud about a
 project without Claude wandering off-topic.
 
-> **This one is a template.** Before using it, open `skills/chit-chat/SKILL.md` and replace
-> `<PROJECT NAME>` / `<path/to/project>` and the "In scope" bullets with your own repo's
-> details. Out of the box it has placeholders, not your project.
+Works out of the box — no editing required. On invocation it detects which repo you're in
+from the working directory (git root → folder name, plus a light read of the README,
+manifest, and `CLAUDE.md` to learn what the project is) and scopes the chat to it. Invoke
+it from the repo root. You can override the target with `/chit-chat <name-or-path>`.
 
 - Manual: `/chit-chat`.
 
