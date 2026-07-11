@@ -15,11 +15,13 @@ invoke one by hand with `/<skill-name>`.
 
 ## Skills in this collection
 
-| Skill | What it does |
-|-------|--------------|
-| [**context-memory**](#context-memory) (`save-context` + `find-context`) | Persistent, per-repo memory so Claude Code stops re-exploring your codebase every session |
-| [**update-docs**](skills/update-docs/) | Finds every doc tied to a repo — tracked or gitignored — and syncs them with its actual current state, verifying each claim before editing |
-| [**review-changes**](skills/review-changes/) | Explains your staged/unstaged diff file-by-file, groups it by theme, flags likely bugs or accidental commits, and proposes a commit plan |
+| Skill | What it does | Invoke |
+|-------|--------------|--------|
+| [**context-memory**](#context-memory) (`save-context` + `find-context`) | Persistent, per-repo memory so Claude Code stops re-exploring your codebase every session | auto + `/save-context`, `/find-context` |
+| [**update-docs**](#update-docs) | Finds every doc tied to a repo — tracked or gitignored — and syncs them with its actual current state, verifying each claim before editing | `/update-docs` |
+| [**review-changes**](#review-changes) | Explains your staged/unstaged diff file-by-file, groups it by theme, flags likely bugs or accidental commits, and proposes a commit plan | `/review-changes` |
+| [**chit-chat**](#chit-chat) | Repo-scoped conversation mode *template* — Claude answers only questions related to your project and politely declines everything else | `/chit-chat` |
+| [**think**](#think) | Deliberate pause for judgment — gives an honest, reasoned opinion instead of staying safely inside the current plan or scope | `/think` |
 
 *(more to come — this list grows as skills prove themselves)*
 
@@ -105,6 +107,77 @@ Both fire proactively, but you can invoke them by hand:
 
 `save-context` writes; `find-context` only reads and *suggests* — it never edits your
 repo, runs anything, or commits on its own.
+
+## update-docs
+
+Docs drift. A README claims a command that no longer exists, a metric goes stale, a file
+it references got renamed. `update-docs` brings a repo's documentation back in line with
+what the code and git history *actually* say.
+
+It makes no assumption about layout — it discovers what docs exist (README, `CLAUDE.md`,
+`docs/**`, `CHANGELOG`, `ARCHITECTURE`, and anything they link to), **including gitignored
+or untracked files** like local notes and scratch write-ups. Before changing a line it
+verifies the claim against the real codebase: the file still exists, the command still
+runs, the number is still current — rather than trusting the old doc text.
+
+Safe by construction: it edits *only* docs, never source, and never commits — you review
+the diff.
+
+- Fires on "update docs", "sync the docs", "docs are stale", "update the README", or after
+  landing a feature when the write-up needs to catch up.
+- Manual: `/update-docs`.
+
+## review-changes
+
+Makes sense of your working-tree diff *before* you commit. Given your staged and unstaged
+changes it produces four things: a per-file explanation of what each change is for, a
+grouping into coherent themes, a short list of things to double-check (likely bugs,
+debug leftovers, accidental commits), and a suggested commit plan that splits the work
+into clean, logical commits.
+
+It reads git and explains — it does not stage, commit, or modify your files.
+
+- Fires on "review my changes", "what did I change", "help me commit this cleanly".
+- Manual: `/review-changes`.
+
+## chit-chat
+
+Repo-scoped conversation mode: Claude answers freely, but *only* about topics connected to
+the current project — its domain concepts, codebase structure, interfaces, dependencies —
+and politely declines anything unrelated. Useful when you want to think out loud about a
+project without Claude wandering off-topic.
+
+> **This one is a template.** Before using it, open `skills/chit-chat/SKILL.md` and replace
+> `<PROJECT NAME>` / `<path/to/project>` and the "In scope" bullets with your own repo's
+> details. Out of the box it has placeholders, not your project.
+
+- Manual: `/chit-chat`.
+
+## think
+
+A deliberate pause for judgment, not another task-list item. When invoked, Claude stops
+advancing whatever plan is in motion, reasons through the real tradeoffs, and gives an
+honest, best-effort opinion — even if that means contradicting or stepping outside the
+current plan, prior approval, or design doc. It flags the deviation rather than quietly
+staying "safely" inside lines that might be wrong.
+
+Reach for it deliberately — it's for the moments you want unconstrained reasoned judgment,
+not routine execution.
+
+- Fires on "really think about this", "give your honest take", "what would you actually
+  do", "stop and think it through".
+- Manual: `/think`.
+
+## Add your own
+
+Skills are just folders, so extending the collection is copy-and-edit:
+
+1. Create `skills/<your-skill>/SKILL.md` with a `name` and a `description` — the
+   description is what tells Claude Code *when* to reach for the skill, so make it specific.
+2. Add supporting files in the same folder if the skill needs them.
+3. Add a row to the table above and (optionally) a section here.
+
+Then install it like any other: `./install.sh <your-skill>`.
 
 ## Privacy
 
